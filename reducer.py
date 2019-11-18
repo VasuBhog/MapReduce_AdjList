@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 """reducer.py"""
 
+#Vasu Bhog
 import sys
-import os
 import copy 
 
 dagL = {}
 
-
-#Helper Functions
 
 #EX. ADJ LIST
 #{'1': ['2', '5', '7', '8', '9', '11', '17', '254913', '438238'],
@@ -23,6 +21,7 @@ def undirected(d):
         for item in d[key]:
             #Get each item
             # print(item)
+            #take out duplicates
             if item not in inv:
                 #create new list
                 inv[item] = [key]
@@ -32,7 +31,7 @@ def undirected(d):
 
 #Get Max Key
 def maxKey(d):
-    max_key = max(d, key = lambda x: len(set(d[x])))
+    max_key = max(d, key = lambda x: len(d[x]))
     return max_key
 
 #Get Lengths of Dict
@@ -46,16 +45,9 @@ def minKey(length, dict):
     minlen = min(length)
     minIndex = length.index(minlen)
     x = dict.keys()
-    min_key = list(x)[0]
+    min_key = list(x)[minIndex]
     return min_key
 
-
-#Create Result File
-def resultFile():
-    path = os.getcwd()
-    f = open(os.path.join(path,"result.txt"),"w+")
-    f.close()
-    return f
 
 #Program Starts here
 # input comes from STDIN
@@ -68,9 +60,10 @@ for line in sys.stdin:
     if key not in dagL:
         dagL[key] = [val]
     else:
-        tmp = dagL[key]
-        tmp.append(val)
-        dagL[key] = tmp
+        if val not in dagL[key]:
+            dagL[key].append(val)
+        else: 
+            pass
 
 
 d = dagL
@@ -81,42 +74,28 @@ unD = undirected(dagL)
 # print("\nDirected Graph: \n" + str(d))
 # print("\nUndirected Graph: \n" + str(unD))
 
-#Begin Writing to Result File
-# resultFile()
-
-# f = open("result.txt",'a+')
-
 #### OUTPUTS ###
 
 ##Directed ---
 
-#Longest Adj List
+#Longest Directed Adj List
 maxkeyD = maxKey(d)
-valD = d.get(maxkeyD)
+valD = d[maxkeyD]
 
 #Min
 lenD = lengthDict(d)
 minkeyD = minKey(lenD,d)
-# f.write("\nLongest Adj List for Directed Graph: \n" + str(maxkeyD) + ":" + str(valD))
 
-# #Max and Min Node
-# f.write("\n\nDirected Graph --- \nNode with Max Connectivity: " + str(maxkeyD))
-# f.write("\nNode with Min Connectivity: " + str(minkeyD))
 
 ##Undirected ----
 
-#Longest Adj List
+#Longest Undirected Adj List
 maxkeyUND = maxKey(unD)
-valUND = d.get(maxkeyUND)
-# f.write("\n\nLongest Adj List for Undirected Graph: \n" + str(maxkeyUND) + ":" + str(valUND))
+valUND = unD[maxkeyUND]
 
 #Min
 lenUND = lengthDict(unD)
 minkeyUND = minKey(lenUND,unD)
-
-# #Max and Min Node
-# f.write("\n\nUndirected Graph --- \nNode with Max Connectivity: " + str(maxkeyUND))
-# f.write("\nNode with Min Connectivity: " + str(minkeyUND))
 
 #For Number of Connections 
 maxConD = d.keys().index(maxkeyD)
